@@ -1,0 +1,21 @@
+{
+  "name": "se-challenge-payroll",
+  "version": "1.0.0",
+  "description": "Applicants for the Full-stack Developer role at Wave must\r complete the following challenge, and submit a solution prior to the onsite\r interview.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "npx nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "knex": "^3.1.0",
+    "mysql2": "^3.12.0",
+    "nodemon": "^3.1.9"
+  }
+}
