@@ -31,7 +31,7 @@ exports.up = function (knex) {
                 .onUpdate("CASCADE")
                 .onDelete("CASCADE");
             table.date("work_date").notNullable();
-            table.decimal("hours_worked", 3, 2).notNullable();
+            table.decimal("hours_worked", 5, 2).notNullable();
             table
                 .string("job_group")
                 .references("job_groups.job_group")
