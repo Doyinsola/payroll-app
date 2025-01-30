@@ -93,9 +93,9 @@ const handleUploads = async (req, res) => {
 
     } catch (error) {
         await trx.rollback();
-        console.log(error);
+        console.log(error); console.error("Error uploading file:", error);
         deleteUploads(filePath);
-        return res.status(500).send('Issue uploading file');
+        return res.status(500).json({ error: 'Issue uploading file' });
     }
 
 }
