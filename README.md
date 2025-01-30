@@ -1,56 +1,33 @@
-# Wave Software Development Challenge
-
-Applicants for the Full-stack Developer role at Wave must
-complete the following challenge, and submit a solution prior to the onsite
-interview.
-
-The purpose of this exercise is to create something that we can work on
-together during the onsite. We do this so that you get a chance to collaborate
-with Wavers during the interview in a situation where you know something better
-than us (it's your code, after all!)
-
-There isn't a hard deadline for this exercise; take as long as you need to
-complete it. However, in terms of total time spent actively working on the
-challenge, we ask that you not spend more than a few hours, as we value your
-time and are happy to leave things open to discussion in the on-site interview.
-
-Please use whatever programming language and framework you feel the most
-comfortable with.
-
-Feel free to email [dev.careers@waveapps.com](dev.careers@waveapps.com) if you
-have any questions.
-
 ## Project Description
 
-Imagine that this is the early days of Wave's history, and that we are prototyping a new payroll system API. A front end (that hasn't been developed yet, but will likely be a single page application) is going to use our API to achieve two goals:
+Prototyping a new payroll system API. A front end (that hasn't been developed yet, but will likely be a single page application) is going to use our API to achieve two goals:
 
 1. Upload a CSV file containing data on the number of hours worked per day per employee
-1. Retrieve a report detailing how much each employee should be paid in each _pay period_
+2. Retrieve a report detailing how much each employee should be paid in each _pay period_
 
 All employees are paid by the hour (there are no salaried employees.) Employees belong to one of two _job groups_ which determine their wages; job group A is paid $20/hr, and job group B is paid $30/hr. Each employee is identified by a string called an "employee id" that is globally unique in our system.
 
 Hours are tracked per employee, per day in comma-separated value files (CSV).
 Each individual CSV file is known as a "time report", and will contain:
 
-1. A header, denoting the columns in the sheet (`date`, `hours worked`,
-   `employee id`, `job group`)
-1. 0 or more data rows
+1. A header, denoting the columns in the sheet (`date`, `hours worked`, `employee id`, `job group`)
+2. 0 or more data rows
 
 In addition, the file name should be of the format `time-report-x.csv`,
 where `x` is the ID of the time report represented as an integer. For example, `time-report-42.csv` would represent a report with an ID of `42`.
 
-You can assume that:
+Assumptions:
 
 1. Columns will always be in that order.
-1. There will always be data in each column and the number of hours worked will always be greater than 0.
-1. There will always be a well-formed header line.
-1. There will always be a well-formed file name.
+2. There will always be data in each column and the number of hours worked will always be greater than 0.
+3. There will always be a well-formed header line.
+4. There will always be a well-formed file name.
 
 A sample input file named `time-report-42.csv` is included in this repo.
 
-### What your API must do:
+### What API does:
 
-We've agreed to build an API with the following endpoints to serve HTTP requests:
+API will have the following endpoints to serve HTTP requests:
 
 1. An endpoint for uploading a file.
 
@@ -70,84 +47,98 @@ We've agreed to build an API with the following endpoints to serve HTTP requests
    - The report should be sorted in some sensical order (e.g. sorted by employee id and then pay period start.)
    - The report should be based on all _of the data_ across _all of the uploaded time reports_, for all time.
 
-As an example, given the upload of a sample file with the following data:
+## Installation Instructions
 
-   | date       | hours worked | employee id | job group |
-   | ---------- | ------------ | ----------- | --------- |
-   | 4/1/2023   | 10           | 1           | A         |
-   | 14/1/2023  | 5            | 1           | A         |
-   | 20/1/2023  | 3            | 2           | B         |
-   | 20/1/2023  | 4            | 1           | A         |
+- Git clone the repo to get it locally
+- Run `npm install` to get install dependencies
+- In MySQL, create database CREATE DATABASE <DB_NAME>
+- Set up .env file, include:
 
-A request to the report endpoint should return the following JSON response:
+  ```js
+  PORT=8080
+  DB_HOST=127.0.0.1
+  DB_NAME=<YOUR_DB_NAME>
+  DB_USER=<YOUR_DB_USER>
+  DB_PASSWORD=<YOUR_DB_PASSWORD>
+  SECRET_KEY=""
+  ```
 
-   ```json
-   {
-     "payrollReport": {
-       "employeeReports": [
-         {
-           "employeeId": "1",
-           "payPeriod": {
-             "startDate": "2023-01-01",
-             "endDate": "2023-01-15"
-           },
-           "amountPaid": "$300.00"
-         },
-         {
-           "employeeId": "1",
-           "payPeriod": {
-             "startDate": "2023-01-16",
-             "endDate": "2023-01-31"
-           },
-           "amountPaid": "$80.00"
-         },
-         {
-           "employeeId": "2",
-           "payPeriod": {
-             "startDate": "2023-01-16",
-             "endDate": "2023-01-31"
-           },
-           "amountPaid": "$90.00"
-         }
-       ]
-     }
-   }
-   ```
+- To generate a secret key you can run this line of code in the Terminal: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'));"`
+- Run `npm run dev` to start the app
+- With these configs the server URL will be `http://localhost:8080`
+- Migrations and seeds are included, to run them:
 
-We consider ourselves to be language agnostic here at Wave, so feel free to use any combination of technologies you see fit to both meet the requirements and showcase your skills. We only ask that your submission:
+  - npm run migrate
+  - npm run seed
 
-- Is easy to set up
-- Can run on either a Linux or Mac OS X developer machine
-- Does not require any non open-source software
-- Includes all the source code you write for the submission, including any models used for setting up your database
+- Data should be populated in the database and can be accessed using the corresponding method for the endpoint using Postman
 
-### Documentation:
+### Database Schema:
 
-Please commit the following to this `README.md`:
+- Worked_hours
 
-1. Instructions on how to build/run your application
-1. Answers to the following questions:
-   - How did you test that your implementation was correct?
-   - If this application was destined for a production environment, what would you add or change?
-   - What compromises did you have to make as a result of the time constraints of this challenge?
+  - id(PK): unique identifier of each record in the table
+  - report_id (FK): unique identifier for each file
+  - employee_id(FK): to uniquely identify users
+  - work_date: to store the date(s) the employee worked
+  - hours_worked: to store the number of hours worked by each employee
+  - job_group(FK): to store the employee's Job category
+  - Date: to store the date on which the employee worked
 
-## Submission Instructions
+- Time_reports:
 
-1. Clone the repository.
-1. Complete your project as described above within your local repository.
-1. Ensure everything you want to commit is committed.
-1. Create a git bundle: `git bundle create your_name.bundle --all`
-1. Email the bundle file to [dev.careers@waveapps.com](dev.careers@waveapps.com) and CC the recruiter you have been in contact with.
+  - report_id(PK): unique identifier for each file
+  - report_name: name of the file uploaded
+  - uploaded_at: timestamp when the file was uploaded
 
-## Evaluation
+- Employee
 
-Evaluation of your submission will be based on the following criteria.
+  - employee_id(PK): to uniquely store users in the system
 
-1. Did you follow the instructions for submission?
-1. Did you complete the steps outlined in the _Documentation_ section?
-1. Were models/entities and other components easily identifiable to the
-   reviewer?
-1. What design decisions did you make when designing your models/entities? Are
-   they explained?
-1. Did you separate any concerns in your application? Why or why not?
-1. Does your solution use appropriate data types for the problem as described?
+- Job_group
+
+  - category(PK): to store the job class(e.g. "A", "B")
+  - hourly_rate: to store the job pay (e.g. 20.00, 30.00)
+
+## Tests
+
+- Validated data in MySQL workbench
+- Tested endpoints in postman
+- Verified error is returned when no file is uploaded.
+- Verified the same file can't be uploaded more than once.
+- Verified the JSON structure produced by the code matched the exact format specified in the requirements, including field names, data types, and nesting.
+
+## Improvements to make this app production ready
+
+- **Comprehensive Testing:**
+
+  - **Unit Tests:** testing individual functions (`parseFile`, database interaction functions, `getPayPeriod`, report generation logic)
+  - **Integration Tests:** verifying the interaction between the file upload endpoint, the database, and the report generation endpoint. These tests would involve uploading test files and checking the database and API response.
+  - **End-to-End Tests:** Would test the entire flow, from file upload to report retrieval, simulating real user interactions.
+
+- **Robust Input Validation:**
+
+  - **File Upload Validation:** Check file is correct type
+  - **CSV Data Validation:** Validating the format and content of the CSV data (column order, date format, numeric values, required fields, well-formed header line). Use a schema validation library.
+  - **Report ID Validation:** Ensuring report IDs are in the correct format.
+
+- **Enhanced Error Handling:**
+
+  - More specific error messages to the client.
+  - Detailed logging (using a logging library like Winston or Bunyan) to track errors and debug issues.
+  - Centralized error handling middleware.
+
+- **Security:**
+
+  - **Authentication and Authorization:** Implement user authentication and authorization to protect the API endpoints.
+  - **File Storage:** storing uploaded files in cloud storage (AWS S3, Google Cloud Storage) or a dedicated file server instead of directly on the server's file system. This also improves scalability and resilience.
+
+- **Performance Optimization:**
+
+  - **Database Indexing:** Ensure appropriate indexes are in place on the database tables for efficient queries.
+  - **Caching:** Cache frequently accessed data (e.g., employee data) to reduce database load.
+
+## Compromises made due to the time constraint
+
+- **Limited Testing:** performed manual checks and example simulations, but did not write formal unit, integration, or end-to-end tests. Thorough testing is crucial for production-ready code.
+- **Error Handling:** The error handling is basic, with generic messages being logged to the console. In a production environment, more detailed error handling and logging should be implemented to track issues over time.
