@@ -50,7 +50,7 @@ API will have the following endpoints to serve HTTP requests:
 ## Installation Instructions
 
 - Git clone the repo to get it locally
-- Run `npm install` to get install dependencies
+- Run `npm install` to install dependencies
 - In MySQL, create database CREATE DATABASE <DB_NAME>
 - Set up .env file, include:
 
@@ -72,6 +72,43 @@ API will have the following endpoints to serve HTTP requests:
   - npm run seed
 
 - Data should be populated in the database and can be accessed using the corresponding method for the endpoint using Postman
+- Endpoints are:
+
+  [POST] /uploads - to upload files
+
+  ```
+  {
+      "message": "File time-report-42.csv uploaded and processed successfully"
+  }
+  ```
+
+  [GET] /reports - to generate reports
+
+  ```
+  Sample output
+  {
+      "payrollReport": {
+          "employeeReports": [
+              {
+                  "employeeID": 1,
+                  "payPeriod": {
+                      "startDate": "2023-11-01",
+                      "endDate": "2023-11-15"
+                  },
+                  "amountPaid": 150
+              },
+              {
+                  "employeeID": 1,
+                  "payPeriod": {
+                      "startDate": "2023-11-16",
+                      "endDate": "2023-11-30"
+                  },
+                  "amountPaid": 220
+              },
+          ]
+      }
+  }
+  ```
 
 ### Database Schema:
 
