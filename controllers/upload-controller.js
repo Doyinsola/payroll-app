@@ -104,4 +104,4 @@ const handleUploads = async (req, res) => {
 
 module.exports = {
     handleUploads,
-}
+};
