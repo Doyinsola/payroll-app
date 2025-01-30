@@ -1,8 +1,6 @@
 const knex = require("knex")(require("../knexfile"));
-const path = require('path');
 const fs = require('fs');
 const Papa = require('papaparse');
-const { rejects } = require("assert");
 
 function deleteUploads(filePath) {
     fs.unlink(filePath, (err) => {
