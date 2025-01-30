@@ -1,6 +1,7 @@
 const knex = require("knex")(require("../knexfile"));
 const fs = require('fs');
 const Papa = require('papaparse');
+const path = require('path');
 
 function deleteUploads(filePath) {
     fs.unlink(filePath, (err) => {
@@ -33,15 +34,16 @@ function parseFile(fileContent) {
 
 const handleUploads = async (req, res) => {
 
-    const trx = await knex.transaction();
     const file = req.file;
-    const filePath = req.file.path;
-    const fileName = file.originalname;
-    const reportID = parseInt(fileName.split('-')[2].split('.')[0]);
 
     if (!file) {
         return res.status(400).send('No file uploaded.');
     }
+
+    const filePath = req.file.path;
+    const fileName = file.originalname;
+    const reportID = parseInt(fileName.split('-')[2].split('.')[0]);
+    const trx = await knex.transaction();
 
     try {
 
